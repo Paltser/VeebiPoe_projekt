@@ -1,6 +1,7 @@
 // @ts-ignore
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
+import Arve_router from "./Routers/Arve_router";
 
 mongoose.connect("mongodb+srv://kristjanpuusepp303:ftl1BRIz8BItD2YK@cluster0.mxusupf.mongodb.net/pood");
 const database = mongoose.connection;
@@ -13,8 +14,11 @@ database.once('connected', () => {
     console.log('Database Connected');
 })
 
-
 const app: Express = express();
+
+app.use(express.json());
+app.use("/", Arve_router);
+
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Your web app is running on a Node');
