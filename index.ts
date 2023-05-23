@@ -17,7 +17,7 @@ database.once('connected', () => {
 const app: Express = express();
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Your web app is running on a Node');
+    res.send('<h1 style=text-align:center>Poe esileht</h1>');
 });
 
 
