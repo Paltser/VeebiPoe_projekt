@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const JobApplication = new mongoose.Schema({
+const JobApplicationSchema = new mongoose.Schema({
     page: {
         type: Number,
         required: true,
@@ -43,4 +43,4 @@ const JobApplication = new mongoose.Schema({
     ],
 });
 
-export default mongoose.model("JobApplication", JobApplication);
+export default mongoose.model("JobApplication", JobApplicationSchema);
