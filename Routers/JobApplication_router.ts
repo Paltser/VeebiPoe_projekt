@@ -1,43 +1,67 @@
-import { Request, Response, Router } from "express";
+import express from "express";
 import JobApplication from "../models/JobApplication";
-const router = Router();
 
-// Endpoint for accepting job applications
-router.get("/admin1/", async (req: Request, res: Response) => {
+const router = express.Router();
+
+// GET route to retrieve all job applications
+router.get("/admin1", async (req, res) => {
     try {
-        // Access the information submitted by the applicant
-        const { page, per_page, total, total_pages, data } = req.body;
-
-        // Create a new JobApplication document based on the submitted data
-        const jobApplication = new JobApplication({
-            page,
-            per_page,
-            total,
-            total_pages,
-            data,
-        });
-
-        // Save the JobApplication document to the database
-        const savedJobApplication = await jobApplication.save();
-
-        // Send the desired JSON response back to the applicant
-        const responseData = {
-            page,
-            per_page,
-            total,
-            total_pages,
-            data,
-            support: {
-                url: "https://reqres.in/#support-heading",
-                text: "To keep ReqRes free, contributions towards server costs are appreciated!",
-            },
-        };
-        res.status(201).json(responseData);
+        const jobApplications = await JobApplication.find();
+        res.json(jobApplications);
     } catch (error) {
-        console.error(error); // Log the error to the console for debugging purposes
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// GET route to retrieve a specific job application by ID
+router.get("/admin1/:id", async (req, res) => {
+    try {
+        const jobApplication = await JobApplication.findById(req.params.id);
+        if (!jobApplication) {
+            return res.status(404).json({ error: "Job application not found" });
+        }
+        res.json(jobApplication);
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// POST route to create a new job application
+router.post("/admin1", async (req, res) => {
+    try {
+        const newJobApplication = await JobApplication.create(req.body);
+        res.status(201).json(newJobApplication);
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// DELETE route to delete a specific job application by ID
+router.delete("/admin1/:id", async (req, res) => {
+    try {
+        const deletedJobApplication = await JobApplication.findByIdAndDelete(req.params.id);
+        if (!deletedJobApplication) {
+            return res.status(404).json({ error: "Job application not found" });
+        }
+        res.sendStatus(204);
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// PUT route to update a specific job application by ID
+router.put("/admin1/:id", async (req, res) => {
+    try {
+        const updatedJobApplication = await JobApplication.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
+        if (!updatedJobApplication) {
+            return res.status(404).json({ error: "Job application not found" });
+        }
+        res.json(updatedJobApplication);
+    } catch (error) {
         res.status(500).json({ error: "Internal server error" });
     }
 });
 
 export default router;
-
