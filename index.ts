@@ -10,6 +10,8 @@ import klient_router from "./Routers/Klient_router";
 import kontaktandmed_router from "./Routers/Kontaktandmed_router";
 import maksestaatus_router from "./Routers/Maksestaatus_router";
 import JobApplication_router from "./Routers/JobApplication_router";
+import cors from "cors";
+
 
 mongoose.connect("mongodb+srv://kristjanpuusepp303:ftl1BRIz8BItD2YK@cluster0.mxusupf.mongodb.net/pood");
 const database = mongoose.connection;
@@ -23,6 +25,9 @@ database.once('connected', () => {
 })
 
 const app: Express = express();
+
+// use cors all roots
+app.use(cors());
 
 app.use(express.json());
 app.use("/", Arve_router);
